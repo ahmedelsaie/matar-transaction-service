@@ -1,0 +1,70 @@
+server:
+    forward-headers-strategy: framework
+security:
+    jwt:
+        expiration-time: 86400000
+        secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+spring:
+    datasource:
+        password: root
+        url: jdbc:mysql://${DB_HOST}:${DB_PORT}/matar
+        username: root
+    jpa:
+        hibernate:
+            ddl-auto: update
+        open-in-view: false
+
+    security:
+        oauth2:
+            client:
+                access-token-uri: http://localhost:8080/auth/login
+
+    kafka:
+        bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        consumer:
+            group-id:
+                store: ${KAFKA_STORE_SERVICE_GROUP}
+                market: ${KAFKA_MARKET_SERVICE_GROUP}
+                statistics: ${KAFKA_STATISTICS_GROUP}
+            auto-offset-reset: earliest
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring:
+                    json:
+                        trusted:
+                            packages: '*'
+                        use:
+                            type:
+                                headers: true
+#                        value:
+#                            default:
+#                                type: "com.tericcabrel.authapi.DomainEvent.TransactionCreatedEvent"
+            topic:
+                thumbnail:
+                    store: ${KAFKA_STORE_THUMBNAILS_TOPIC}
+                    market: ${KAFKA_MARKET_THUMBNAILS_TOPIC}
+                statistics: ${KAFKA_STATISTICS_TOPIC}
+            retryable-topic:
+                attempts: 3
+                backoff:
+                    delay: 1000
+                    multiplier: 2.0
+logging:
+    level:
+        org:
+            hibernate:
+                SQL: DEBUG
+#springdoc:
+#    cache:
+#        disabled: true
+#    swagger-ui:
+#        enabled: true
+#        path: /swagger-ui.html
+#    api-docs:
+#        path: /api-docs
+
+
