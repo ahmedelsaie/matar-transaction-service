@@ -1,3 +1,4 @@
+
 Running the app
 Docker
 $ docker-compose up
@@ -19,3 +20,4 @@ api is divided into admi
 System Description
 system consisits mainly of transactions, each transaction is associated with user id, and domain id (which refer to order id).
 system has a cron job that do the task of changing transaction state.
+
